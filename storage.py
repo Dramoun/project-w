@@ -4,3 +4,7 @@ class TerrainColors:
     MEDIUM = (150, 150, 150)
     HIGH = (100, 50, 0)
     LAKE = (100, 50, 220)
+
+
+if __name__ == "__main__":
+    print("Running storage module")

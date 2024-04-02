@@ -1,19 +1,25 @@
 from storage import TerrainColors
-from gridhandler import GridHandler
+from random import randrange
 
 
-class Terrain(GridHandler):
-    def __init__(self, grid_size):
-        super().__init__(grid_size)
+class Terrain:
+    def __init__(self, grid_handler):
+        self.grid_handler = grid_handler
 
-    def mountain_generation(self, tile_grid) -> dict:
+    def update(self, tile_grid) -> dict:
+        updated_grid = self._mountain_generation(tile_grid)
+        updated_grid = self._lake_generation(updated_grid)
+
+        return updated_grid
+
+    def _mountain_generation(self, tile_grid) -> dict:
         new_grid = dict()
 
         for tile in tile_grid.values():
             neighbour_mountain_count = 0
 
             if tile.color == TerrainColors.HIGH:
-                neighbours = tile.get_neighbours()
+                neighbours = self.grid_handler.get_neighbours((tile.pos_x, tile.pos_y))
 
                 for neighbour in neighbours:
                     if neighbour is not None:
@@ -29,13 +35,13 @@ class Terrain(GridHandler):
 
         return new_grid
 
-    def lake_generation(self, tile_grid) -> dict:
+    def _lake_generation(self, tile_grid) -> dict:
         new_grid = dict()
 
         for tile in tile_grid.values():
             if tile.color == TerrainColors.LOW:
-                second_neighbours = second_ring_neighbors(tile_grid, tile.pos_x, tile.pos_y)
-                first_neighbours = tile.get_neighbours()
+                second_neighbours = self.grid_handler.second_ring_neighbors((tile.pos_x, tile.pos_y))
+                first_neighbours = self.grid_handler.get_neighbours((tile.pos_x, tile.pos_y))
                 mountain_count = 0
 
                 for first_neighbour in first_neighbours:
@@ -52,7 +58,7 @@ class Terrain(GridHandler):
                     if rand_lake == 0:
                         new_grid[f'{tile.pos_x}_{tile.pos_y}'] = tile
                     else:
-                        tile.color = color_dict['LAKE']
+                        tile.color = TerrainColors.LAKE
                         new_grid[f'{tile.pos_x}_{tile.pos_y}'] = tile
 
                 else:
@@ -63,3 +69,6 @@ class Terrain(GridHandler):
 
         return new_grid
 
+
+if __name__ == "__main__":
+    print("Running terrain module")

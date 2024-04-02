@@ -22,3 +22,6 @@ class Tile:
         else:
             return TerrainColors.HIGH
 
+
+if __name__ == "__main__":
+    print("Running tile module")

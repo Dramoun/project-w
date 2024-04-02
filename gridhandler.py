@@ -4,10 +4,9 @@ from tile import Tile
 class GridHandler:
     def __init__(self, grid_size):
         self.grid_size = grid_size
-        self.dictionary = dict()
 
-    def gen_grid_cords_dict(self):
-        cords_dict = dict()
+    def gen_grid_cords_dict(self) -> dict:
+        cords_dict = {}
 
         for tx in range(-self.grid_size, self.grid_size + 1):
             for ty in range(-self.grid_size, self.grid_size + 1):
@@ -15,7 +14,7 @@ class GridHandler:
                     tile = Tile(tx, ty)
                     cords_dict[f'{tx}_{ty}'] = tile
 
-        self.dictionary = cords_dict
+        return cords_dict
 
     def _in_map(self, hexs: tuple):
         cube = self._even_row_to_cube(hexs)
@@ -32,14 +31,14 @@ class GridHandler:
         return q, r, -q - r
 
     def second_ring_neighbors(self, original_tile: tuple) -> list:
-        original_neighbours = self._get_neighbours(original_tile)
+        original_neighbours = self.get_neighbours(original_tile)
         original_tiles_list = original_neighbours + [original_tile]
 
         second_ring_neighbors_list = []
 
         for tile in original_neighbours:
             if tile is not None:
-                tile_neighbours = self._get_neighbours(tile)
+                tile_neighbours = self.get_neighbours(tile)
 
                 for neighbour in tile_neighbours:
                     if neighbour is not None and neighbour not in original_tiles_list:
@@ -47,7 +46,7 @@ class GridHandler:
 
         return second_ring_neighbors_list
 
-    def _get_neighbours(self, tile: tuple) -> list:
+    def get_neighbours(self, tile: tuple) -> list:
         neighbours = [self._top_left_neighbour(tile),
                       self._top_right_neighbour(tile),
                       self._left_neighbour(tile),
@@ -120,3 +119,7 @@ class GridHandler:
         if self._in_map(neighbour_pos):
             return neighbour_pos
         return None
+
+
+if __name__ == "__main__":
+    print("Running grid handler module")
